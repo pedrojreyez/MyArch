@@ -1,0 +1,53 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    // Priorizar datos técnicos sobre arte visual
+    "logo": {
+        "type": "none"
+    },
+    // Minimizar decoración
+    "display": {
+        "separator": "  ",
+        "color": {
+            "keys": "white"
+        }
+    },
+    // Información esencial
+    "modules": [
+        {
+            "type": "os",
+            "key": "OS"
+        },
+        {
+            "type": "kernel",
+            "key": "Kernel"
+        },
+        {
+            "type": "uptime",
+            "key": "Uptime"
+        },
+        {
+            "type": "packages",
+            "key": "Pkgs"
+        },
+        {
+            "type": "shell",
+            "key": "Shell"
+        },
+        {
+            "type": "wm",
+            "key": "WM"
+        },
+        {
+            "type": "terminal",
+            "key": "Term"
+        },
+        {
+            "type": "cpu",
+            "key": "CPU"
+        },
+        {
+            "type": "memory",
+            "key": "Mem"
+        }
+    ]
+}

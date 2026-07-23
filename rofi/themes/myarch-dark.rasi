@@ -1,0 +1,79 @@
+/* Para evitar fatiga visual usando paleta oscura */
+* {
+    bg: #161616;
+    bg-alt: #1f1f1f;
+    fg: #e6e6e6;
+    fg-alt: #8a8a8a;
+    border-color: #2a2a2a;
+    accent: #4d4d4d;
+    background-color: transparent;
+    text-color: @fg;
+}
+
+window {
+    background-color: @bg;
+    border: 2px solid @border-color;
+    border-radius: 8px;
+    width: 500px;
+    padding: 16px;
+}
+
+mainbox {
+    children: [inputbar, listview];
+    spacing: 12px;
+}
+
+inputbar {
+    background-color: @bg-alt;
+    border-radius: 6px;
+    padding: 10px 14px;
+    children: [prompt, entry];
+    spacing: 10px;
+}
+
+prompt {
+    text-color: @fg-alt;
+}
+
+entry {
+    placeholder: "Buscar...";
+    placeholder-color: #5c5c5c;
+    text-color: @fg;
+}
+
+listview {
+    columns: 1;
+    lines: 8;
+    fixed-height: true;
+    spacing: 2px;
+    cycle: true;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px 12px;
+    border-radius: 4px;
+    spacing: 10px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color: @fg;
+}
+
+element selected.normal {
+    background-color: @bg-alt;
+    text-color: @fg;
+    border-left: 2px solid @accent;
+}
+
+element-icon {
+    size: 18px;
+    background-color: transparent;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    vertical-align: 0.5;
+}

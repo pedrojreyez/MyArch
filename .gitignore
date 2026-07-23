@@ -1,0 +1,23 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Backups
+*.bak
+*.backup
+
+# Directorios temporales
+tmp/
+temp/
+
+# Archivos de editor
+.vscode/
+.idea/
+*.code-workspace
+
+# Zinit (se instala en runtime)
+.zinit/
+MyArch-prompt.md

@@ -1,0 +1,100 @@
+/* Para mantener un diseño sobrio y consistente */
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    border-radius: 0;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: #161616;
+    color: #e6e6e6;
+    border-bottom: 1px solid #2a2a2a;
+    border-radius: 8px;
+    /* Sombra coherente con decoration.shadow de Hyprland */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    margin: 4px 8px 0 8px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #8a8a8a;
+    background: transparent;
+    border-radius: 0;
+    margin: 0;
+    border-bottom: 2px solid transparent;
+    transition: all 0.1s;
+}
+
+#workspaces button.active {
+    color: #e6e6e6;
+    font-weight: bold;
+    border-bottom: 2px solid #4d4d4d;
+}
+
+#workspaces button:hover {
+    color: #e6e6e6;
+    background: #1f1f1f;
+}
+
+#workspaces button.urgent {
+    color: #a33a3a;
+}
+
+window#waybar hyprland-window,
+#window {
+    color: #8a8a8a;
+    font-weight: normal;
+}
+
+#clock,
+#network,
+#wireplumber,
+#battery,
+#tray,
+#custom-power,
+#custom-notification {
+    padding: 0 10px;
+    color: #e6e6e6;
+    background-color: transparent;
+    border-radius: 0;
+}
+
+#battery.warning {
+    color: #8a8a8a;
+}
+
+/* Para alertar sobre apagado inminente */
+#battery.critical {
+    color: #a33a3a;
+}
+
+#wireplumber.muted {
+    color: #5c5c5c;
+}
+
+#network.disconnected {
+    color: #5c5c5c;
+}
+
+#custom-power {
+    color: #8a8a8a;
+}
+
+#custom-power:hover {
+    color: #e6e6e6;
+}
+
+#custom-notification {
+    color: #8a8a8a;
+}
+
+tooltip {
+    background: #161616;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    color: #e6e6e6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}

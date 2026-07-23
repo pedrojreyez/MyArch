@@ -1,0 +1,12 @@
+/* Para cargar de forma modular el tema visual */
+configuration {
+    modi: "drun,run";
+    show-icons: true;
+    display-drun: "";
+    display-run: "";
+    drun-display-format: "{name}";
+    font: "JetBrainsMono Nerd Font 11";
+    click-to-exit: true;
+}
+
+@import "~/.config/rofi/themes/myarch-dark.rasi"

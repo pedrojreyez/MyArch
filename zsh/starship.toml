@@ -1,0 +1,91 @@
+# Mantener compacto
+add_newline = false
+
+format = "$directory$git_branch$git_status$status$character"
+
+[directory]
+truncation_length = 3
+truncate_to_repo = true
+style = "bold #e6e6e6"
+format = "[$path]($style) "
+read_only = " "
+read_only_style = "#5c5c5c"
+
+[git_branch]
+symbol = " "
+style = "#8a8a8a"
+format = "[$symbol$branch]($style) "
+
+[git_status]
+style = "#5c5c5c"
+format = "([$all_status$ahead_behind]($style) )"
+ahead = "⇡${count}"
+behind = "⇣${count}"
+modified = "!"
+staged = "+"
+untracked = "?"
+conflicted = "="
+
+[status]
+disabled = false
+symbol = ""
+style = "#a33a3a"
+format = "[$status]($style) "
+
+[character]
+success_symbol = "[❯](#8a8a8a)"
+error_symbol = "[❯](#a33a3a)"
+
+# Limpieza de entorno
+[nodejs]
+disabled = true
+[python]
+disabled = true
+[rust]
+disabled = true
+[golang]
+disabled = true
+[java]
+disabled = true
+[package]
+disabled = true
+[docker_context]
+disabled = true
+[aws]
+disabled = true
+[gcloud]
+disabled = true
+[kubernetes]
+disabled = true
+[terraform]
+disabled = true
+[ruby]
+disabled = true
+[php]
+disabled = true
+[lua]
+disabled = true
+[c]
+disabled = true
+[cmake]
+disabled = true
+[dotnet]
+disabled = true
+[elixir]
+disabled = true
+[elm]
+disabled = true
+[haskell]
+disabled = true
+[nim]
+disabled = true
+[perl]
+disabled = true
+[scala]
+disabled = true
+[swift]
+disabled = true
+[zig]
+disabled = true
+[dart]
+disabled = true
