@@ -1,95 +1,102 @@
 #!/usr/bin/env bash
-set -euo pipefail
+#
+# install.sh — Instalador de MyArch
+# Idempotente: se puede correr varias veces sin romper nada.
+set -e
 
-# Colores para output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+HOME_DIR="$HOME"
 
-log_info() { echo -e "${BLUE}[INFO]${NC} $1"; }
-log_success() { echo -e "${GREEN}[EXITO]${NC} $1"; }
-log_warn() { echo -e "${YELLOW}[ADVERTENCIA]${NC} $1"; }
-log_error() { echo -e "${RED}[ERROR]${NC} $1"; }
+info()  { echo -e "\033[1;34m[MyArch]\033[0m $1"; }
+ok()    { echo -e "\033[1;32m[OK]\033[0m $1"; }
+warn()  { echo -e "\033[1;33m[!]\033[0m $1"; }
 
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BACKUP_DIR="$HOME/.dotfiles_backup/$(date +%Y%m%d_%H%M%S)"
-
-PACMAN_PKGS=(
-    git stow zsh hyprland hyprpaper hypridle hyprlock kitty waybar 
-    swaync wlogout grim slurp fastfetch nemo brightnessctl playerctl 
-    wl-clipboard cliphist polkit-kde-agent ttf-jetbrains-mono-nerd starship
-)
-
-# En Arch, rofi-wayland está extra/community a veces, o en AUR.
-AUR_PKGS=(
-    rofi-wayland hyprshot
-)
-
-# 1. Comprobar si es Arch Linux
-if [ ! -f /etc/arch-release ]; then
-    log_error "Este script está diseñado para Arch Linux."
-    exit 1
+# ── 0. Verificación previa ────────────────────────────────
+if [[ ! -f /etc/arch-release ]]; then
+    warn "Este script está diseñado para Arch Linux. Continúa bajo tu propio riesgo."
 fi
-log_info "Sistema Arch Linux detectado."
 
-# 2. Instalar paquetes de pacman
-log_info "Instalando paquetes de pacman..."
-sudo pacman -S --needed --noconfirm "${PACMAN_PKGS[@]}"
+# ── 1. Actualizar el sistema ──────────────────────────────
+info "Actualizando el sistema..."
+sudo pacman -Syu --noconfirm
 
-# 3. Comprobar/Instalar yay (AUR helper)
+# ── 2. Paquetes oficiales (repos pacman) ──────────────────
+info "Instalando paquetes principales..."
+sudo pacman -S --needed --noconfirm \
+    hyprland xdg-desktop-portal-hyprland \
+    qt5-wayland qt6-wayland \
+    pipewire pipewire-pulse pipewire-jack wireplumber \
+    polkit hyprpolkitagent \
+    kitty waybar rofi swaync \
+    hyprlock hypridle hyprpaper \
+    cliphist wl-clipboard grim slurp \
+    zsh starship \
+    nemo \
+    fastfetch \
+    ttf-jetbrains-mono-nerd \
+    pavucontrol jq libnotify \
+    git base-devel
+
+ok "Paquetes oficiales instalados."
+
+# ── 3. Instalar yay si no existe (para AUR) ───────────────
 if ! command -v yay &> /dev/null; then
-    log_warn "yay no encontrado. Instalando yay..."
-    git clone https://aur.archlinux.org/yay.git /tmp/yay
-    cd /tmp/yay
-    makepkg -si --noconfirm
-    cd "$DOTFILES_DIR"
-    rm -rf /tmp/yay
+    info "Instalando yay (AUR helper)..."
+    tmp_dir=$(mktemp -d)
+    git clone https://aur.archlinux.org/yay.git "$tmp_dir/yay"
+    (cd "$tmp_dir/yay" && makepkg -si --noconfirm)
+    rm -rf "$tmp_dir"
+    ok "yay instalado."
+else
+    ok "yay ya estaba instalado."
 fi
 
-# 4. Instalar paquetes de AUR
-log_info "Instalando paquetes de AUR..."
-yay -S --needed --noconfirm "${AUR_PKGS[@]}"
+# ── 4. Paquetes AUR ────────────────────────────────────────
+info "Instalando paquetes desde AUR..."
+yay -S --needed --noconfirm wlogout hyprshot
+ok "Paquetes AUR instalados."
 
-# 5 & 6. Stow de paquetes
-mkdir -p "$BACKUP_DIR"
-STOW_PKGS=(hypr waybar rofi kitty swaync wlogout fastfetch)
+# ── 5. Symlinks de configuración ──────────────────────────
+info "Creando symlinks hacia $REPO_DIR..."
+mkdir -p "$HOME_DIR/.dotfiles_backup"
 
-log_info "Aplicando configuraciones con Stow..."
-for pkg in "${STOW_PKGS[@]}"; do
-    if [ -d "$DOTFILES_DIR/$pkg" ]; then
-        stow -R -t "$HOME/.config" "$pkg" || log_warn "Problema aplicando stow para $pkg"
+link_config() {
+    local name="$1"
+    local target="$HOME_DIR/.config/$name"
+    if [[ -e "$target" && ! -L "$target" ]]; then
+        mv "$target" "$HOME_DIR/.dotfiles_backup/${name}_$(date +%Y%m%d_%H%M%S)"
+        warn "Respaldo creado para $name existente."
     fi
+    ln -sfn "$REPO_DIR/$name" "$target"
+    ok "Symlink: ~/.config/$name -> $REPO_DIR/$name"
+}
+
+for module in hypr waybar rofi kitty swaync wlogout fastfetch; do
+    link_config "$module"
 done
 
-# 7. Configuración de zsh
-log_info "Configurando zsh y starship..."
-if [ -f "$DOTFILES_DIR/zsh/.zshrc" ]; then
-    ln -sf "$DOTFILES_DIR/zsh/.zshrc" "$HOME/.zshrc"
-fi
-if [ -f "$DOTFILES_DIR/zsh/starship.toml" ]; then
-    mkdir -p "$HOME/.config"
-    ln -sf "$DOTFILES_DIR/zsh/starship.toml" "$HOME/.config/starship.toml"
+# Zsh y Starship (rutas distintas a .config/<carpeta>)
+ln -sfn "$REPO_DIR/zsh/.zshrc" "$HOME_DIR/.zshrc"
+ln -sfn "$REPO_DIR/zsh/starship.toml" "$HOME_DIR/.config/starship.toml"
+ok "Symlinks de Zsh y Starship creados."
+
+# ── 6. Aplicar configuración de Nemo ──────────────────────
+if [[ -f "$REPO_DIR/nemo/apply-nemo-settings.sh" ]]; then
+    info "Aplicando configuración de Nemo..."
+    bash "$REPO_DIR/nemo/apply-nemo-settings.sh"
+    ok "Configuración de Nemo aplicada."
 fi
 
-# 8. Nemo settings
-if [ -f "$DOTFILES_DIR/nemo/apply-nemo-settings.sh" ]; then
-    log_info "Aplicando configuración de Nemo..."
-    bash "$DOTFILES_DIR/nemo/apply-nemo-settings.sh"
-fi
-
-# 9. Wallpaper
-if [ -d "$DOTFILES_DIR/assets" ]; then
-    log_info "Configurando assets (fondos, etc.)..."
-    mkdir -p "$HOME/.config/hypr/assets"
-    cp -r "$DOTFILES_DIR/assets/"* "$HOME/.config/hypr/assets/" || true
-fi
-
-# 10. Cambiar shell a zsh
-if [[ "$SHELL" != */zsh ]]; then
-    log_info "Cambiando shell por defecto a zsh..."
+# ── 7. Shell por defecto ──────────────────────────────────
+if [[ "$SHELL" != *"zsh"* ]]; then
+    info "Cambiando shell por defecto a Zsh..."
     chsh -s "$(which zsh)"
+    ok "Shell cambiado a Zsh (aplica en el próximo login)."
+else
+    ok "Zsh ya es el shell por defecto."
 fi
 
-log_success "Instalación completada con éxito. Por favor, cierra sesión y vuelve a entrar."
+# ── Fin ────────────────────────────────────────────────────
+echo ""
+ok "¡Instalación de MyArch completa!"
+warn "Cierra sesión y selecciona 'Hyprland' en tu gestor de inicio de sesión."

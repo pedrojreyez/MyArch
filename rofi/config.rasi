@@ -9,4 +9,4 @@ configuration {
     click-to-exit: true;
 }
 
-@import "~/.config/rofi/themes/myarch-dark.rasi"
+@theme "/home/pedrojreyes/.config/rofi/themes/myarch-dark.rasi"

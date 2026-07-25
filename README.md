@@ -4,8 +4,6 @@
 
 A strictly functional, noise-free desktop environment built on Arch Linux and Hyprland. Designed for focus and discipline — every visible element serves a purpose. No decorative noise, no color distractions, no unnecessary animations.
 
-<!-- TODO: Add screenshots of the final setup -->
-<!-- Preview: desktop, waybar + rofi, hyprlock, terminal -->
 
 ---
 
@@ -76,7 +74,6 @@ MyArch/
 ├── LICENSE
 ├── install.sh
 ├── docs/
-│   ├── screenshots/
 │   └── troubleshooting.md
 ├── hypr/
 │   ├── hyprland.conf
@@ -152,7 +149,6 @@ All color values are defined inline using the hex tokens listed above. To change
 
 - [ ] Neovim configuration with matching monochrome theme
 - [ ] GTK/Qt theme integration for a fully consistent dark appearance
-- [ ] Automated screenshot generation for documentation
 - [ ] Multi-monitor profile support via `monitors.conf` presets
 
 ---
