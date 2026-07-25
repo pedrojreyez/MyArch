@@ -37,6 +37,7 @@
     "format-wifi": " {essid}",
     "format-ethernet": " {ipaddr}/{cidr}",
     "format-disconnected": "",
+    "on-click": "kitty --class floating-nmtui -e nmtui",
     "tooltip-format": "{signaldBm}dBm"
   },
   "wireplumber": {
@@ -52,6 +53,7 @@
     },
     "format": "{icon} {capacity}%",
     "format-charging": " {capacity}%",
+    "on-click": "bash $HOME/MyArch/hypr/scripts/power-profile-menu.sh",
     "format-icons": ["", "", "", "", ""]
   },
   "tray": {

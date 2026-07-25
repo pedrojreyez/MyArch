@@ -35,6 +35,7 @@ sudo pacman -S --needed --noconfirm \
     fastfetch \
     ttf-jetbrains-mono-nerd \
     pavucontrol jq libnotify \
+    nwg-dock-hyprland nwg-displays network-manager-applet \
     git base-devel
 
 ok "Paquetes oficiales instalados."
@@ -71,7 +72,7 @@ link_config() {
     ok "Symlink: ~/.config/$name -> $REPO_DIR/$name"
 }
 
-for module in hypr waybar rofi kitty swaync wlogout fastfetch; do
+for module in hypr waybar rofi kitty swaync wlogout fastfetch nwg-dock-hyprland wireplumber; do
     link_config "$module"
 done
 
